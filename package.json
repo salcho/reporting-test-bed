@@ -6,9 +6,12 @@
   "dependencies": {
     "express": "^4.17.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  },
   "scripts": {
-    "test": "npm test"
+    "test": "npm test",
+    "dev": "nodemon ./app.js"
   },
   "repository": {
     "type": "git",
