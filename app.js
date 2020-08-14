@@ -38,8 +38,10 @@ app.post('/run-reports', async (req, res) => {
     var id = crypto.randomBytes(20).toString('hex');
     const pages = Object.values(req.body).map(e => `http://${hostname}:${port}/${e}?id=${id}`)
     console.log(pages)
+
+    // open report endpoints
     for(const page of pages) {
-      await openPage.goto(page, {waitUntil: 'networkidle0'})
+      await openPage.goto(page, {waitUntil: 'networkidle0'}) // wait for puppeteer to complete fetch
     }
     
     await browser.close()
@@ -55,6 +57,7 @@ app.post('/csp-reports', function(req, res){
   var report = JSON.stringify(req.body)
   directory_name =__dirname + '/reports/'+ req.body["csp-report"]["document-uri"].split("=")[1]
 
+  // check if directory already exists
   if (!fs.existsSync(directory_name)) {
     fs.mkdir(directory_name,function (err) {
       if (err) {
@@ -63,6 +66,7 @@ app.post('/csp-reports', function(req, res){
     });
   }
 
+  // store report
   file_name = 'csp_' + dateFormat(Date.now(), "dd-mm-yyyy_h:MM:ss") + "_rand" + Math.floor((Math.random() * 5000) + 1) + '.txt'
   fs.writeFile(directory_name + '/' + file_name, report, function (err) {
     if (err) {
@@ -75,10 +79,11 @@ app.post('/csp-reports', function(req, res){
 app.post('/trustedTypes-report', function(req, res){
   console.log('Trusted types violation!')
   console.log(req.body)
+
   var report = JSON.stringify(req.body)
   directory_name =__dirname + '/reports/'+ req.body["csp-report"]["document-uri"].split("=")[1]
-  
 
+  // check if directory already exists
   if (!fs.existsSync(directory_name)) {
     fs.mkdir(directory_name,function (err) {
       if (err) {
@@ -87,6 +92,7 @@ app.post('/trustedTypes-report', function(req, res){
     });
   }
 
+  // store report
   file_name = 'tt_' + dateFormat(Date.now(), "dd-mm-yyyy_h:MM:ss") + "_rand" + Math.floor((Math.random() * 5000) + 1) + '.txt'
   fs.writeFile(directory_name + '/' +  file_name, report, function (err) {
     if (err) {
