@@ -14,7 +14,7 @@ app.listen(port, hostname, () => {
 });
 
 app.use(function(req, res, next){
-    res.setHeader('Content-Security-Policy', "object-src 'none';script-src 'nonce-1234' 'strict-dynamic' https: http:;base-uri 'none'; report-uri /csp-reports");
+    res.setHeader('Content-Security-Policy', "object-src 'none';script-src 'nonce-r4nd0m' 'strict-dynamic' https: http:;base-uri 'none'; report-uri /csp-reports");
     next()
 })
 

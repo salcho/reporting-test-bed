@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<head>
+
+    <meta></meta>
+
+</head>
+<html>
+<body>
+
+<h1>Unsafe eval function</h1>
+
+<script nonce="r4nd0m">
+    let arbitraryJs = code => eval(code);
+    arbitraryJs("evalFunctionHasRun='true'");
+</script>
+    
+
+</body>
+</html>
