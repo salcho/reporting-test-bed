@@ -27,6 +27,12 @@ app.post('/csp-report', function(req, res){
   res.sendStatus(204)
 })
 
+app.post('/trustedTypes-report', (req, res) => {
+  console.log('Trusted Types')
+  console.log(req.body)
+  res.sendStatus(204)
+})
+
 app.get('/noNonce', function(req, res){
     res.sendFile(__dirname + '/scriptwithoutnonce.html')
 })
@@ -36,6 +42,6 @@ app.get('/jsUri', function(req, res){
 })
 
 app.get('/trustedTypes', (req, res) => {
-  res.setHeader('Content-Security-Policy', "object-src 'none'; require-trusted-types-for 'script';base-uri 'none'; report-uri /csp-report");
+  res.setHeader('Content-Security-Policy', "object-src 'none'; require-trusted-types-for 'script';base-uri 'none'; report-uri /trustedTypes-report");
   res.sendFile(__dirname + '/trustedTypes.html')
 })
