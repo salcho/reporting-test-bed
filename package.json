@@ -5,7 +5,8 @@
   "main": "app.js",
   "dependencies": {
     "dateformat": "^3.0.3",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "puppeteer": "^5.2.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"

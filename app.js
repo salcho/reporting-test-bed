@@ -1,11 +1,11 @@
 const hostname = '127.0.0.1';
 const port = 3000;
-
+const puppeteer = require('puppeteer')
 const express = require('express')
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const dateFormat = require('dateformat');
-var app = express()
+var app = express();
 
 app.use('/csp-reports',bodyParser.json({type: 'application/csp-report'}));
 
@@ -20,6 +20,22 @@ app.use(function(req, res, next){
 
 app.get('/', function(req, res){
     res.sendFile(__dirname + "/views" + "/index.html")
+})
+
+app.post('/run-reports', async (req, res) => {
+  try {
+  const browser = await puppeteer.launch();
+  const openPage = await browser.newPage();
+  const pages = req.body.map(e => `http://${hostname}:${port}${e}`)
+  // const pages = ['http://localhost:3000/csp/scriptWithoutNonce']
+  for (let i = 0; i < pages.length; i++) {
+    await openPage.goto(pages[i])
+  }
+  await browser.close()
+  } catch (e) {
+    console.log(e)
+  }
+  res.sendStatus(204)
 })
 
 app.post('/csp-reports', function(req, res){
