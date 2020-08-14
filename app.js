@@ -5,6 +5,7 @@ const express = require('express')
 const bodyParser = require('body-parser');
 var app = express()
 
+app.use(bodyParser.json({type: 'application/csp-report'}));
 app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
 });
@@ -22,7 +23,7 @@ app.get('/', function(req, res){
 
 app.post('/csp-report', function(req, res){
   console.log('CSP violation!')
-  console.log(req)
+  console.log(req.body)
   res.sendStatus(204)
 })
 
