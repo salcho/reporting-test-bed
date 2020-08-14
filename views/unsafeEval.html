@@ -1,19 +1,14 @@
 <!DOCTYPE html>
-<head>
-
-    <meta></meta>
-
-</head>
 <html>
-<body>
+    <head>
+        <title>Inline Event Handler CSP</title>
+    </head>
+    <body>
+        <h1>Unsafe eval function</h1>
 
-<h1>Unsafe eval function</h1>
-
-<script nonce="r4nd0m">
-    let arbitraryJs = code => eval(code);
-    arbitraryJs("evalFunctionHasRun='true'");
-</script>
-    
-
-</body>
+        <script nonce="r4nd0m">
+            let arbitraryJs = code => eval(code);
+            arbitraryJs("evalFunctionHasRun='true'");
+        </script>
+    </body>
 </html>

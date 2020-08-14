@@ -6,13 +6,23 @@
 <body>
 
     <h1>Test Bed</h1>
-    <button id="run_tests"></button>
-    <script>
-       document.getElementById('run_tests').addEventListener("click", () => {
-           fetch('/scriptWithoutNonce').then(res => res.json())
-            .then(data => console.log(data))
-       })
-    </script>
-
+    
+    <form action="/run-results">
+        <input type="checkbox" id="inlineEventHandler" name="vtest1" value="inlineEventHandler">
+        <label for="inlineEventHandler"> CSP - Inline Event Handler </label><br>
+        <input type="checkbox" id="scriptWithoutNonce" name="test2" value="scriptWithoutNonce">
+        <label for="scriptWithoutNonce"> CSP- Script without nonce</label><br>
+        <input type="checkbox" id="jsUri" name="test3" value="jsUri">
+        <label for="test3"> CSP - JavaScript URI</label><br>
+        <input type="checkbox" id="unsafeEval" name="test4" value="unsafeEval">
+        <label for="test4"> CSP - Unsafe Eval</label><br>
+        <input type="checkbox" id="innerHTML" name="test5" value="innerHTML">
+        <label for="test5"> Trusted Types - innerHTML</label><br>
+        <input type="checkbox" id="scriptSrc" name="test6" value="scriptSrc">
+        <label for="test6"> Trusted Types - Script src attribute</label><br>
+        <br>
+        <input type="submit" value="Submit">
+      </form>
+      
 </body>
 </html>

@@ -9,14 +9,14 @@ var app = express()
 
 app.use('/csp-reports',bodyParser.json({type: 'application/csp-report'}));
 
+app.use('/csp/*', function(req, res, next){
+  res.setHeader('Content-Security-Policy', "object-src 'none';script-src 'nonce-r4nd0m' 'strict-dynamic' https: http:;base-uri 'none'; report-uri /csp-reports");
+  next()
+})
+
 app.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`);
 });
-
-app.use(function(req, res, next){
-    res.setHeader('Content-Security-Policy', "object-src 'none';script-src 'nonce-r4nd0m' 'strict-dynamic' https: http:;base-uri 'none'; report-uri /csp-reports");
-    next()
-})
 
 app.get('/', function(req, res){
     res.sendFile(__dirname + "/views" + "/index.html")
@@ -49,7 +49,7 @@ app.post('/trustedTypes-report', function(req, res){
 })
 
 app.get('/csp/scriptWithoutNonce', function(req, res){
-    res.sendFile(__dirname + '/views/scriptwithoutnonce.html')
+  res.sendFile(__dirname + '/views/scriptwithoutnonce.html')
 })
 
 app.get('/csp/inlineEventHandler', function(req, res){
@@ -57,7 +57,7 @@ app.get('/csp/inlineEventHandler', function(req, res){
 })
 
 app.get('/csp/jsUri', function(req, res){
-    res.sendFile(__dirname + '/views/jsUri.html')
+   res.sendFile(__dirname + '/views/jsUri.html')
 })
 
 app.get('/csp/unsafeEval', function(req, res){
