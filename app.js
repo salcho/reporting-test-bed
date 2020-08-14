@@ -36,22 +36,22 @@ app.post('/csp-reports', function(req, res){
 })
 
 app.get('/scriptWithoutNonce', function(req, res){
-    res.sendFile(__dirname + '/scriptwithoutnonce.html')
+    res.sendFile(__dirname + '/views/scriptwithoutnonce.html')
 })
 
 app.get('/inlineEventHandler', function(req, res){
-  res.sendFile(__dirname + '/inlineEventHandler.html')
+  res.sendFile(__dirname + '/views/inlineEventHandler.html')
 })
 
 app.get('/jsUri', function(req, res){
-    res.sendFile(__dirname + '/jsUri.html')
+    res.sendFile(__dirname + '/views/jsUri.html')
 })
 
 app.get('/unsafeEval', function(req, res){
-    res.sendFile(__dirname + '/unsafeEval.html')
+    res.sendFile(__dirname + '/views/unsafeEval.html')
 })
 
 app.get('/trustedTypes', (req, res) => {
   res.setHeader('Content-Security-Policy', "object-src 'none'; require-trusted-types-for 'script';base-uri 'none'; report-uri /trustedTypes-report");
-  res.sendFile(__dirname + '/trustedTypes.html')
+  res.sendFile(__dirname + '/views/trustedTypes.html')
 })
