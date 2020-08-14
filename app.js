@@ -1,6 +1,7 @@
 const hostname = '127.0.0.1';
 const port = 3000;
 const puppeteer = require('puppeteer')
+var crypto = require("crypto");
 const express = require('express')
 const bodyParser = require('body-parser');
 const fs = require('fs');
@@ -33,7 +34,8 @@ app.post('/run-reports', async (req, res) => {
   try {
   const browser = await puppeteer.launch();
   const openPage = await browser.newPage();
-  const pages = Object.values(req.body).map(e => `http://${hostname}:${port}/${e}`)
+  var id = crypto.randomBytes(20).toString('hex');
+  const pages = Object.values(req.body).map(e => `http://${hostname}:${port}/${e}?id=${id}`)
   console.log(pages)
   for (let i = 0; i < pages.length; i++) {
     await openPage.goto(pages[i])
