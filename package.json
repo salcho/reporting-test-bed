@@ -1,0 +1,23 @@
+{
+  "name": "reporting-test-bed",
+  "version": "1.0.0",
+  "description": "A reporting test bed for analyzing CSP, COEP, Trutsted Types violation reports",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/salcho/reporting-test-bed.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/salcho/reporting-test-bed/issues"
+  },
+  "homepage": "https://github.com/salcho/reporting-test-bed#readme"
+}
