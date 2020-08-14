@@ -10,7 +10,7 @@ app.listen(port, hostname, () => {
 });
 
 app.use(function(req, res, next){
-    res.setHeader('Content-Security-Policy', "object-src 'none';script-src 'nonce-1234' 'strict-dynamic' https: http:;base-uri 'none'; report-uri /csp-report");
+    res.setHeader('Content-Security-Policy', "object-src 'none';script-src 'nonce-1234' 'strict-dynamic' https: http:;base-uri 'none'; report-uri /csp-reports");
     next()
 })
 
@@ -20,7 +20,7 @@ app.get('/', function(req, res){
     res.send(req.params)
 })
 
-app.post('/csp-report', function(req, res){
+app.post('/csp-reports', function(req, res){
     console.log('CSP violation!')
     console.log(req)
     res.sendStatus(204)
