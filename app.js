@@ -47,6 +47,10 @@ app.get('/jsUri', function(req, res){
     res.sendFile(__dirname + '/jsUri.html')
 })
 
+app.get('/unsafeEval', function(req, res){
+    res.sendFile(__dirname + '/unsafeEval.html')
+})
+
 app.get('/trustedTypes', (req, res) => {
   res.setHeader('Content-Security-Policy', "object-src 'none'; require-trusted-types-for 'script';base-uri 'none'; report-uri /trustedTypes-report");
   res.sendFile(__dirname + '/trustedTypes.html')
