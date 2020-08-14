@@ -9,9 +9,15 @@ var app = express();
 
 app.use('/csp-reports',bodyParser.json({type: 'application/csp-report'}));
 app.use('/run-reports', express.urlencoded({extended: true}))
+app.use('/trustedTypes-report',bodyParser.json({type: 'application/csp-report'}));
 
 app.use('/csp/*', function(req, res, next){
   res.setHeader('Content-Security-Policy', "object-src 'none';script-src 'nonce-r4nd0m' 'strict-dynamic' https: http:;base-uri 'none'; report-uri /csp-reports");
+  next()
+})
+
+app.use('/trustedTypes/*', function(req, res, next){
+  res.setHeader('Content-Security-Policy', "object-src 'none'; require-trusted-types-for 'script';base-uri 'none'; report-uri /trustedTypes-report");
   next()
 })
 
@@ -81,7 +87,10 @@ app.get('/csp/unsafeEval', function(req, res){
   res.sendFile(__dirname + '/views/unsafeEval.html')
 })
 
-app.get('/trustedTypes', (req, res) => {
-  res.setHeader('Content-Security-Policy', "object-src 'none'; require-trusted-types-for 'script';base-uri 'none'; report-uri /trustedTypes-report");
-  res.sendFile(__dirname + '/views/trustedTypes.html')
+app.get('/trustedTypes/innerHTML', (req, res) => {
+  res.sendFile(__dirname + '/views/innerHtmlTT.html')
+})
+
+app.get('/trustedTypes/scriptSrc', (req, res) => {
+  res.sendFile(__dirname + '/views/scriptSrcTT.html')
 })
