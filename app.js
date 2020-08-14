@@ -19,7 +19,7 @@ app.use(function(req, res, next){
 })
 
 app.get('/', function(req, res){
-    res.send(req.params)
+    res.sendFile(__dirname + "/index.html")
 })
 
 app.post('/csp-reports', function(req, res){
