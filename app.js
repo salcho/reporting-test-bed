@@ -4,6 +4,7 @@ const puppeteer = require('puppeteer')
 var crypto = require("crypto");
 const express = require('express')
 const bodyParser = require('body-parser');
+const views = require('./views/routes');
 const fs = require('fs');
 const dateFormat = require('dateformat');
 const { dirname } = require('path');
@@ -102,26 +103,4 @@ app.post('/trustedTypes-report', function(req, res){
   res.sendStatus(204)
 })
 
-app.get('/csp/scriptWithoutNonce', function(req, res){
-  res.sendFile(__dirname + '/views/scriptwithoutnonce.html')
-})
-
-app.get('/csp/inlineEventHandler', function(req, res){
-  res.sendFile(__dirname + '/views/inlineEventHandler.html')
-})
-
-app.get('/csp/jsUri', function(req, res){
-   res.sendFile(__dirname + '/views/jsUri.html')
-})
-
-app.get('/csp/unsafeEval', function(req, res){
-  res.sendFile(__dirname + '/views/unsafeEval.html')
-})
-
-app.get('/trustedTypes/innerHTML', (req, res) => {
-  res.sendFile(__dirname + '/views/innerHtmlTT.html')
-})
-
-app.get('/trustedTypes/scriptSrc', (req, res) => {
-  res.sendFile(__dirname + '/views/scriptSrcTT.html')
-})
+app.use('/', views);
