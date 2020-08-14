@@ -26,7 +26,7 @@ app.post('/csp-reports', function(req, res){
   console.log('CSP violation!')
   console.log(req.body)
   var report = JSON.stringify(req.body)
-  file_name = 'csp_' + dateFormat(Date.now(), "dd-mm-yyyy_h:MM:ss") + '.txt'
+  file_name = 'csp_' + dateFormat(Date.now(), "dd-mm-yyyy_h:MM:ss") + "_rand" + Math.floor((Math.random() * 5000) + 1) + '.txt'
   fs.writeFile(__dirname + '/reports/' + file_name, report, function (err) {
     if (err) {
       return console.log(err);
