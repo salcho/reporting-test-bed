@@ -6,6 +6,7 @@ const express = require('express')
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const dateFormat = require('dateformat');
+const { dirname } = require('path');
 var app = express();
 
 app.use('/csp-reports',bodyParser.json({type: 'application/csp-report'}));
@@ -52,8 +53,14 @@ app.post('/csp-reports', function(req, res){
   console.log('CSP violation!')
   console.log(req.body)
   var report = JSON.stringify(req.body)
+  directory_name =__dirname + '/reports/'+ req.body["csp-report"]["document-uri"].split("=")[1]
+  fs.mkdir(directory_name,function (err) {
+    if (err) {
+      return console.log(err);
+    }
+  });
   file_name = 'csp_' + dateFormat(Date.now(), "dd-mm-yyyy_h:MM:ss") + "_rand" + Math.floor((Math.random() * 5000) + 1) + '.txt'
-  fs.writeFile(__dirname + '/reports/' + file_name, report, function (err) {
+  fs.writeFile(directory_name + file_name, report, function (err) {
     if (err) {
       return console.log(err);
     }
@@ -64,9 +71,14 @@ app.post('/csp-reports', function(req, res){
 app.post('/trustedTypes-report', function(req, res){
   console.log('Trusted types violation!')
   console.log(req.body)
-  var report = JSON.stringify(req.body)
-  file_name = 'trutstedTypes_' + dateFormat(Date.now(), "dd-mm-yyyy_h:MM:ss") + "_rand" + Math.floor((Math.random() * 5000) + 1) + '.txt'
-  fs.writeFile(__dirname + '/reports/' + file_name, report, function (err) {
+  directory_name =__dirname + '/reports/'+ req.body["csp-report"]["document-uri"].split("=")[1]
+  fs.mkdir(directory_name,function (err) {
+    if (err) {
+      return console.log(err);
+    }
+  });
+  file_name = 'tt_' + dateFormat(Date.now(), "dd-mm-yyyy_h:MM:ss") + "_rand" + Math.floor((Math.random() * 5000) + 1) + '.txt'
+  fs.writeFile(directory_name + file_name, report, function (err) {
     if (err) {
       return console.log(err);
     }
