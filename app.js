@@ -35,20 +35,33 @@ app.post('/csp-reports', function(req, res){
   res.sendStatus(204)
 })
 
-app.get('/scriptWithoutNonce', function(req, res){
+app.post('/trustedTypes-report', function(req, res){
+  console.log('Trusted types violation!')
+  console.log(req.body)
+  var report = JSON.stringify(req.body)
+  file_name = 'trutstedTypes_' + dateFormat(Date.now(), "dd-mm-yyyy_h:MM:ss") + "_rand" + Math.floor((Math.random() * 5000) + 1) + '.txt'
+  fs.writeFile(__dirname + '/reports/' + file_name, report, function (err) {
+    if (err) {
+      return console.log(err);
+    }
+  });
+  res.sendStatus(204)
+})
+
+app.get('/csp/scriptWithoutNonce', function(req, res){
     res.sendFile(__dirname + '/views/scriptwithoutnonce.html')
 })
 
-app.get('/inlineEventHandler', function(req, res){
+app.get('/csp/inlineEventHandler', function(req, res){
   res.sendFile(__dirname + '/views/inlineEventHandler.html')
 })
 
-app.get('/jsUri', function(req, res){
+app.get('/csp/jsUri', function(req, res){
     res.sendFile(__dirname + '/views/jsUri.html')
 })
 
-app.get('/unsafeEval', function(req, res){
-    res.sendFile(__dirname + '/views/unsafeEval.html')
+app.get('/csp/unsafeEval', function(req, res){
+  res.sendFile(__dirname + '/views/unsafeEval.html')
 })
 
 app.get('/trustedTypes', (req, res) => {
