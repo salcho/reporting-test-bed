@@ -27,11 +27,10 @@ app.post('/csp-reports', function(req, res){
   console.log(req.body)
   var report = JSON.stringify(req.body)
   file_name = 'csp_' + dateFormat(Date.now(), "dd-mm-yyyy_h:MM:ss") + '.txt'
-  fs.writeFile(__dirname + '/reports/' + file_name, report, function (err,data) {
+  fs.writeFile(__dirname + '/reports/' + file_name, report, function (err) {
     if (err) {
       return console.log(err);
     }
-    console.log(data);
   });
   res.sendStatus(204)
 })
