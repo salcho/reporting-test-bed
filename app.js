@@ -32,15 +32,16 @@ app.get('/', function(req, res){
 
 app.post('/run-reports', async (req, res) => {
   try {
-  const browser = await puppeteer.launch();
-  const openPage = await browser.newPage();
-  var id = crypto.randomBytes(20).toString('hex');
-  const pages = Object.values(req.body).map(e => `http://${hostname}:${port}/${e}?id=${id}`)
-  console.log(pages)
-  for (let i = 0; i < pages.length; i++) {
-    await openPage.goto(pages[i])
-  }
-  await browser.close()
+    const browser = await puppeteer.launch();
+    const openPage = await browser.newPage();
+    var id = crypto.randomBytes(20).toString('hex');
+    const pages = Object.values(req.body).map(e => `http://${hostname}:${port}/${e}?id=${id}`)
+    console.log(pages)
+    for(const page of pages) {
+      await openPage.goto(page, {waitUntil: 'networkidle0'})
+    }
+    
+    await browser.close()
   } catch (e) {
     console.log(e)
   }
