@@ -4,10 +4,10 @@ const puppeteer = require('puppeteer')
 var crypto = require("crypto");
 const express = require('express')
 const bodyParser = require('body-parser');
-const views = require('./views/routes');
+const views = require('./views/viewRoutes');
 const fs = require('fs');
 const dateFormat = require('dateformat');
-const { dirname } = require('path');
+
 var app = express();
 
 app.use('/csp-reports',bodyParser.json({type: 'application/csp-report'}));
