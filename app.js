@@ -8,6 +8,7 @@ const dateFormat = require('dateformat');
 var app = express();
 
 app.use('/csp-reports',bodyParser.json({type: 'application/csp-report'}));
+app.use('/run-reports', express.urlencoded({extended: true}))
 
 app.use('/csp/*', function(req, res, next){
   res.setHeader('Content-Security-Policy', "object-src 'none';script-src 'nonce-r4nd0m' 'strict-dynamic' https: http:;base-uri 'none'; report-uri /csp-reports");
@@ -26,8 +27,8 @@ app.post('/run-reports', async (req, res) => {
   try {
   const browser = await puppeteer.launch();
   const openPage = await browser.newPage();
-  const pages = req.body.map(e => `http://${hostname}:${port}${e}`)
-  // const pages = ['http://localhost:3000/csp/scriptWithoutNonce']
+  const pages = Object.values(req.body).map(e => `http://${hostname}:${port}/${e}`)
+  console.log(pages)
   for (let i = 0; i < pages.length; i++) {
     await openPage.goto(pages[i])
   }
