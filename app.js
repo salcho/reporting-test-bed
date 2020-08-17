@@ -79,6 +79,7 @@ app.get(`/process-reports`, function(req,res){
     processedReports.push(processReport(reportJSON))
   })
 
+  console.log(processedReports)
   res.send(processedReports)
 })
 
