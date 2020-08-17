@@ -32,27 +32,66 @@ app.get('/', function(req, res){
 })
 
 app.post('/run-reports', async (req, res) => {
+  console.log("start run-reports")
+  var id = crypto.randomBytes(20).toString('hex');
   try {
     const browser = await puppeteer.launch();
     const openPage = await browser.newPage();
-    var id = crypto.randomBytes(20).toString('hex');
     const pages = Object.values(req.body).map(e => `http://${hostname}:${port}/${e}?id=${id}`)
     console.log(pages)
     for(const page of pages) {
       await openPage.goto(page, {waitUntil: 'networkidle0'})
     }
-    
     await browser.close()
   } catch (e) {
     console.log(e)
   }
+  console.log("end run-reports")
   res.sendStatus(204)
+  // res.redirect('/see-reports?id=' + id);
+})
+
+app.get(`/see-reports`, function(req, res) {
+  res.sendFile(__dirname + '/views/seeReports.html');
+})
+
+function processReport(reportJSON){
+  var processed = {
+      "root_cause" : "",
+      "original_report" : reportJSON,
+      "explanation" : "",
+      "sample_script" : "",
+      "fix" : ""
+  }
+  return processed;
+}
+
+app.get(`/process-reports`, function(req,res){
+  console.log("start process-reports")
+
+  let directory_name = __dirname + '/reports/' + req.query.id
+
+  //make sure directory exists
+  if (!fs.existsSync(directory_name)) {
+    throw new Error("Reports directory doesn't exist")
+  }
+
+  processedReports = []
+  files = fs.readdirSync(directory_name)
+  files.forEach(file => {
+    let rawdata = fs.readFileSync(directory_name + '/' + file)
+    let reportJSON = JSON.parse(rawdata);
+    processedReports.push(processReport(reportJSON))
+  })
+
+  res.send(processedReports)
 })
 
 app.post('/csp-reports', function(req, res){
   console.log('CSP violation!')
   console.log(req.body)
   var report = JSON.stringify(req.body)
+  // TODO: maybe we should use a url lib instead of this?
   directory_name =__dirname + '/reports/'+ req.body["csp-report"]["document-uri"].split("=")[1]
 
   if (!fs.existsSync(directory_name)) {
@@ -63,7 +102,7 @@ app.post('/csp-reports', function(req, res){
     });
   }
 
-  file_name = 'csp_' + dateFormat(Date.now(), "dd-mm-yyyy_h:MM:ss") + "_rand" + Math.floor((Math.random() * 5000) + 1) + '.txt'
+  file_name = 'csp_' + dateFormat(Date.now(), "dd-mm-yyyy_h:MM:ss") + "_rand" + Math.floor((Math.random() * 5000) + 1) + '.json'
   fs.writeFile(directory_name + '/' + file_name, report, function (err) {
     if (err) {
       return console.log(err);
@@ -87,7 +126,7 @@ app.post('/trustedTypes-report', function(req, res){
     });
   }
 
-  file_name = 'tt_' + dateFormat(Date.now(), "dd-mm-yyyy_h:MM:ss") + "_rand" + Math.floor((Math.random() * 5000) + 1) + '.txt'
+  file_name = 'tt_' + dateFormat(Date.now(), "dd-mm-yyyy_h:MM:ss") + "_rand" + Math.floor((Math.random() * 5000) + 1) + '.json'
   fs.writeFile(directory_name + '/' +  file_name, report, function (err) {
     if (err) {
       return console.log(err);
