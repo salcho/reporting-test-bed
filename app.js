@@ -9,6 +9,8 @@ const fs = require('fs');
 const dateFormat = require('dateformat');
 const { type } = require('os');
 
+const { getDirectoryName, processReport } = require('./helpers')  
+
 var app = express();
 
 app.use('/csp-reports',bodyParser.json({type: 'application/csp-report'}));
@@ -51,8 +53,8 @@ app.post('/run-reports', async (req, res) => {
     console.log(e)
   }
   console.log("end run-reports")
-  res.sendStatus(204)
-  // res.redirect('/see-reports?id=' + id);
+  // res.sendStatus(204)
+  res.redirect('/see-reports?id=' + id);
 })
 
 app.get(`/see-reports`, function(req, res) {
