@@ -8,6 +8,8 @@ const views = require('./views/viewRoutes');
 const fs = require('fs');
 const dateFormat = require('dateformat');
 
+const { getDirectoryName, processReport } = require('./helpers')  
+
 var app = express();
 
 app.use('/csp-reports',bodyParser.json({type: 'application/csp-report'}));
@@ -58,16 +60,6 @@ app.get(`/see-reports`, function(req, res) {
   res.sendFile(__dirname + '/views/seeReports.html');
 })
 
-function processReport(reportJSON){
-  var processed = {
-      "root_cause" : "",
-      "original_report" : reportJSON,
-      "explanation" : "",
-      "sample_script" : "",
-      "fix" : ""
-  }
-  return processed;
-}
 
 app.get(`/process-reports`, function(req,res){
   console.log("start process-reports")
