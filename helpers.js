@@ -1,20 +1,39 @@
-module.exports = {
-    getDirectoryName: () => {
+const fs = require('fs');
+const dateFormat = require('dateformat');
 
+module.exports = {
+    saveReport: (rawReport, type) => {
+        let report = JSON.stringify(rawReport)
+        directory_name =__dirname + '/reports/'+ rawReport['csp-report']["document-uri"].split("=")[1]
+        // check if directory already exists
+        if (!fs.existsSync(directory_name)) {
+          fs.mkdir(directory_name,function (err) {
+            if (err) {
+              return console.log(err);
+            }
+          });
+        }
+    
+        file_name = `${type}${dateFormat(Date.now(), "dd-mm-yyyy_h:MM:ss")}_rand${Math.floor((Math.random() * 5000) + 1)}'.json`
+        fs.writeFile(directory_name + '/' + file_name, report, function (err) {
+          if (err) {
+            return console.log(err);
+          }
+        });
     },
     processReport: (reportJSON) => {
-        var report = reportJSON["csp-report"]
-        var violatedDirective = report["violated-directive"]
-        var root_cause = report["effective-directive"]
-        var blockedUri = report["blocked-uri"]
-        var scriptSample = report["script-sample"]
-        var row = report["line-number"]
-        var column = report["column-number"]
-        var file = report["source-file"]
-        var originalPolicy = report["original-policy"]
+        let report = reportJSON["csp-report"]
+        let violatedDirective = report["violated-directive"]
+        let root_cause = report["effective-directive"]
+        let blockedUri = report["blocked-uri"]
+        let scriptSample = report["script-sample"]
+        let row = report["line-number"]
+        let column = report["column-number"]
+        let file = report["source-file"]
+        let originalPolicy = report["original-policy"]
         
-        var type = ""
-        var explanation = ""
+        let type = ""
+        let explanation = ""
         
         if (violatedDirective == "script-src-elem" && blockedUri == "inline"){
             explanation = "Nonce value incorrect or non-existent"
@@ -26,8 +45,8 @@ module.exports = {
             explanation = "Unsafe eval function"
             type = "CSP violation"
         } else if (violatedDirective == "require-trusted-types-for"){
-            var arr = scriptSample.split(" ")
-            var cause = arr[1]
+            let arr = scriptSample.split(" ")
+            let cause = arr[1]
             if (arr[0]=="HTMLScriptElement"){
             explanation = `Trusted Types Violation: script tag requires Trusted Types, ${cause} attribute blocked`
             } else{
@@ -41,7 +60,7 @@ module.exports = {
             type = "Unknown violation"
         }
         
-        var processed = {
+        let processed = {
             "type": type,
             "row": row,
             "column": column,
