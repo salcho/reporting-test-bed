@@ -5,52 +5,203 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/styles/default.min.css">
     <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
-    <script type="text/javascript">
-    
-        $(document).ready(function(){
-            var report_data;
-            $.getJSON("/process-reports?id=" + getUrlParameter("id"), function(data) { 
-                report_data = data; 
-                console.log(report_data)
-
-                for (var i=0; i<report_data.length; i++) {
-                    display_report(report_data[i])
-                }
-            });
-        })
-        
-        function getUrlParameter(name) {
-            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-            var results = regex.exec(location.search);
-            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-        };
-
-        function display_report(reportJSON) {
-            var stringReport = JSON.stringify(reportJSON)
-            console.log(stringReport)
-            var report_row = $("<div class='row report'>")
-            
-            $(report_row).append("<div class='col-12'><h4>Violation Type:" + reportJSON["type"] +"</h4> </div>")
-            $(report_row).append("<h4>Violation Details</h4>")
-            var json_report= $("<pre>")
-            $(json_report).append("<code>" + JSON.stringify(reportJSON["original_report"]) + "</code>")
-            $(report_row).append(json_report)
-            $("#container").append(report_row)
-        }
-    </script>
-    <style>
-        .report {
-            border-bottom: 1px solid grey;
-            padding: 10px;
-            margin: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/styles/default.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
 </head>
 <body>
-    <div id="container" class="container-fluid">
+    <div id="container">
 
+        
     </div>
-
 </body>
 </html>
+
+<script type="text/javascript">
+    
+    $(document).ready(function(){
+        var report_data;
+        $.getJSON("/process-reports?id=" + getUrlParameter("id"), function(data) { 
+            report_data = data; 
+            console.log(report_data)
+
+            for (var i=0; i<report_data.length; i++) {
+                display_report(report_data[i])
+            }
+        });
+    })
+    
+    function getUrlParameter(name) {
+        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+        var results = regex.exec(location.search);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    };
+
+    function display_report(reportJSON) {
+        var container = document.getElementById("container")
+        container.setAttribute("style", "padding: 35px")
+
+        var title = document.createElement("h1")
+        title.innerHTML = reportJSON["type"]
+        title.setAttribute("style", "padding-bottom: 35px")
+        container.appendChild(title)
+
+        var div1 = document.createElement("div")
+        div1.setAttribute("style", "padding-bottom: 10px")
+
+        var root_cause = document.createElement("h4")
+        root_cause.innerHTML = "Root cause: "
+        root_cause.setAttribute("style", "display: inline;")
+        div1.appendChild(root_cause)
+
+        var pre = document.createElement("pre")
+        var code = document.createElement("code")
+        code.setAttribute("class", "html")
+        code.innerHTML = reportJSON["root_cause"]
+        pre.appendChild(code)
+        pre.setAttribute("style", "display: inline; padding-left: 5px")
+        div1.appendChild(pre)
+        container.appendChild(div1)
+
+        var div2 = document.createElement("div")
+        div2.setAttribute("style", "padding-bottom: 10px")
+
+        var expl = document.createElement("h4")
+        expl.setAttribute("style", "display: inline;")
+        expl.innerHTML = "Explanation: "
+        div2.appendChild(expl)
+
+        var p = document.createElement("p")
+        p.setAttribute("style", "display: inline; padding-left: 5px")
+        p.innerHTML = reportJSON["explanation"]
+        div2.appendChild(p)
+        container.appendChild(div2)
+
+
+        var div3 = document.createElement("div")
+        div3.setAttribute("style", "padding-bottom: 10px")
+
+        var og_policy = document.createElement("h4")
+        og_policy.setAttribute("style", "display: inline;")
+        og_policy.innerHTML = "Original policy: "
+        div3.appendChild(og_policy)
+
+        var pre1 = document.createElement("pre")
+        var code1 = document.createElement("code")
+        code1.setAttribute("class", "html")
+        code1.innerHTML = reportJSON["original_policy"]  
+        pre1.appendChild(code1)
+        pre1.setAttribute("style", "display: inline; padding-left: 5px")
+        div3.appendChild(pre1)
+        container.appendChild(div3)
+
+        var div4 = document.createElement("div")
+        div4.setAttribute("style", "padding-bottom: 10px")
+
+        var place = document.createElement("h4")
+        place.setAttribute("style", "display: inline;")
+        place.innerHTML = `Place: `
+        div4.appendChild(place)
+
+        var p1 = document.createElement("p")
+        p1.setAttribute("style", "display: inline; padding-left: 5px")
+        p1.innerHTML = `Row: ${reportJSON["row"]}, Column: ${reportJSON["column"]}`
+        div4.appendChild(p1)
+        container.appendChild(div4)
+
+        var div5 = document.createElement("div")
+        div5.setAttribute("style", "padding-bottom: 10px")
+
+        var file = document.createElement("h4")
+        file.setAttribute("style", "display: inline;")
+        file.innerHTML = `File: `
+        div5.appendChild(file)
+
+        var p2 = document.createElement("p")
+        p2.setAttribute("style", "display: inline;")
+        p2.innerHTML = reportJSON["file"]
+        div5.appendChild(p2)
+        container.appendChild(div5)
+
+
+        if (reportJSON["sample_script"].length != 0){
+            var div7 = document.createElement("div")
+            div7.setAttribute("style", "padding-bottom: 10px")
+
+            var sample = document.createElement("h4")
+            sample.setAttribute("style", "display: inline;")
+            sample.innerHTML = `Script Sample: `
+            div7.appendChild(sample)
+
+            var pre4 = document.createElement("pre")
+            var code4 = document.createElement("code")
+            code4.setAttribute("class", "html")
+            code4.innerHTML = syntaxHighlight(reportJSON["sample_script"]) 
+            pre4.appendChild(code4)
+            pre4.setAttribute("style", "display: inline; padding-left: 5px")
+            div7.appendChild(pre4)
+            container.appendChild(div7)
+        }
+
+        var div6 = document.createElement("div")
+        div6.setAttribute("style", "padding-bottom: 10px")
+
+        var rep = document.createElement("h4")
+        rep.setAttribute("style", "display: inline;")
+        rep.innerHTML = `Report: `
+        div6.appendChild(rep)
+
+        var pre3 = document.createElement("pre")
+        var code3 = document.createElement("code")
+        code3.setAttribute("class", "html")
+        code3.innerHTML = syntaxHighlight(reportJSON["original_report"]) 
+        pre3.appendChild(code3)
+        pre3.setAttribute("style", "display: inline; padding-left: 5px")
+        div6.appendChild(pre3)
+        container.appendChild(div6)
+
+
+        var divider = document.createElement("hr")
+        container.appendChild(divider)
+        
+    }
+
+    function syntaxHighlight(json) {
+        if (typeof json != 'string') {
+            json = JSON.stringify(json, undefined, 5);
+        }
+        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+            var cls = 'number';
+            if (/^"/.test(match)) {
+                if (/:$/.test(match)) {
+                    cls = 'key';
+                } else {
+                    cls = 'string';
+                }
+            } else if (/true|false/.test(match)) {
+                cls = 'boolean';
+            } else if (/null/.test(match)) {
+                cls = 'null';
+            }
+            return '<span class="' + cls + '">' + match + '</span>';
+        });
+    }
+</script>
+<style>
+    pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
+    .string { color: green; }
+    .number { color: darkorange; }
+    .boolean { color: blue; }
+    .null { color: magenta; }
+    .key { color: red; }
+    hr {
+        border: none;
+        height: 2px;
+        /* Set the hr color */
+        color: #333; /* old IE */
+        background-color: #333; /* Modern Browsers */
+        margin-bottom: 40px;
+    }
+</style>

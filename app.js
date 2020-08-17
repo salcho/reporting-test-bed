@@ -1,16 +1,17 @@
 const hostname = '127.0.0.1';
 const port = 3000;
 const puppeteer = require('puppeteer')
-let crypto = require("crypto");
+var crypto = require("crypto");
 const express = require('express')
 const bodyParser = require('body-parser');
 const views = require('./views/viewRoutes');
 const fs = require('fs');
+const dateFormat = require('dateformat');
 const { type } = require('os');
 
-const { saveReport, processReport } = require('./helpers')  
+const { getDirectoryName, processReport } = require('./helpers')  
 
-let app = express();
+var app = express();
 
 app.use('/csp-reports',bodyParser.json({type: 'application/csp-report'}));
 app.use('/run-reports', express.urlencoded({extended: true}))
@@ -36,7 +37,7 @@ app.get('/', function(req, res){
 
 app.post('/run-reports', async (req, res) => {
   console.log("start run-reports")
-  let id = crypto.randomBytes(20).toString('hex');
+  var id = crypto.randomBytes(20).toString('hex');
   try {
     const browser = await puppeteer.launch();
     const openPage = await browser.newPage();
@@ -78,16 +79,31 @@ app.get(`/process-reports`, function(req,res){
     processedReports.push(processReport(reportJSON))
   })
 
-  console.log(processedReports)
   res.send(processedReports)
 })
 
 app.post('/csp-reports', function(req, res){
   console.log('CSP violation!')
   console.log(req.body)
+  var report = JSON.stringify(req.body)
   // TODO: maybe we should use a url lib instead of this?
-  saveReport(req.body, 'csp_')
-  
+  directory_name =__dirname + '/reports/'+ req.body["csp-report"]["document-uri"].split("=")[1]
+
+  // check if directory already exists
+  if (!fs.existsSync(directory_name)) {
+    fs.mkdir(directory_name,function (err) {
+      if (err) {
+        return console.log(err);
+      }
+    });
+  }
+
+  file_name = 'csp_' + dateFormat(Date.now(), "dd-mm-yyyy_h:MM:ss") + "_rand" + Math.floor((Math.random() * 5000) + 1) + '.json'
+  fs.writeFile(directory_name + '/' + file_name, report, function (err) {
+    if (err) {
+      return console.log(err);
+    }
+  });
   res.sendStatus(204)
 })
 
@@ -95,8 +111,24 @@ app.post('/trustedTypes-report', function(req, res){
   console.log('Trusted types violation!')
   console.log(req.body)
 
-  saveReport(req.body, 'tt_')
-  
+  var report = JSON.stringify(req.body)
+  directory_name =__dirname + '/reports/'+ req.body["csp-report"]["document-uri"].split("=")[1]
+
+  // check if directory already exists
+  if (!fs.existsSync(directory_name)) {
+    fs.mkdir(directory_name,function (err) {
+      if (err) {
+        return console.log(err);
+      }
+    });
+  }
+
+  file_name = 'tt_' + dateFormat(Date.now(), "dd-mm-yyyy_h:MM:ss") + "_rand" + Math.floor((Math.random() * 5000) + 1) + '.json'
+  fs.writeFile(directory_name + '/' +  file_name, report, function (err) {
+    if (err) {
+      return console.log(err);
+    }
+  });
   res.sendStatus(204)
 })
 
