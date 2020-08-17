@@ -50,8 +50,8 @@ app.post('/run-reports', async (req, res) => {
     console.log(e)
   }
   console.log("end run-reports")
-  res.sendStatus(204)
-  // res.redirect('/see-reports?id=' + id);
+  // res.sendStatus(204)
+  res.redirect('/see-reports?id=' + id);
 })
 
 app.get(`/see-reports`, function(req, res) {
