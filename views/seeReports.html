@@ -2,8 +2,23 @@
 <html>
 <head>
     <title>Violation Reports</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/styles/default.min.css">
     <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
     <script type="text/javascript">
+    
+        $(document).ready(function(){
+            var report_data;
+            $.getJSON("/process-reports?id=" + getUrlParameter("id"), function(data) { 
+                report_data = data; 
+                console.log(report_data)
+
+                for (var i=0; i<report_data.length; i++) {
+                    display_report(report_data[i])
+                }
+            });
+        })
+        
         function getUrlParameter(name) {
             name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
             var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
@@ -11,14 +26,31 @@
             return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
         };
 
-        var report_data
-        $.getJSON("/process-reports?id=" + getUrlParameter("id"), function(data) { 
-            report_data = data; 
-            console.log(report_data)
-        });
+        function display_report(reportJSON) {
+            var stringReport = JSON.stringify(reportJSON)
+            console.log(stringReport)
+            var report_row = $("<div class='row report'>")
+            
+            $(report_row).append("<div class='col-12'><h4>Violation Type:" + reportJSON["type"] +"</h4> </div>")
+            $(report_row).append("<h4>Violation Details</h4>")
+            var json_report= $("<pre>")
+            $(json_report).append("<code>" + JSON.stringify(reportJSON["original_report"]) + "</code>")
+            $(report_row).append(json_report)
+            $("#container").append(report_row)
+        }
     </script>
+    <style>
+        .report {
+            border-bottom: 1px solid grey;
+            padding: 10px;
+            margin: 10px;
+        }
+    </style>
 </head>
 <body>
+    <div id="container" class="container-fluid">
+
+    </div>
 
 </body>
 </html>
