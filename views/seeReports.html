@@ -16,7 +16,7 @@
 <script type="text/javascript">
     document.addEventListener('DOMContentLoaded', function() {
         var report_data;
-        $.getJSON("/process-reports?id=" + getUrlParameter("id"), function(data) { 
+        $.getJSON("/get-reports?id=" + getUrlParameter("id"), function(data) { 
             report_data = data; 
             console.log(report_data)
 
@@ -138,6 +138,21 @@
             div7.appendChild(pre4)
             container.appendChild(div7)
         }
+
+        var div_vc = document.createElement("div")
+        div_vc.setAttribute("style", "padding-bottom: 10px")
+        var violating_code = document.createElement("h4")
+        violating_code.setAttribute("style", "display: inline;")
+        violating_code.innerHTML = `Violating code: `
+        div_vc.appendChild(violating_code)
+
+        var pre_vc = document.createElement("pre")
+        var code_vc = document.createElement("code")
+        code_vc.innerHTML = syntaxHighlight(reportJSON["violating_code"]) 
+        pre_vc.appendChild(code_vc)
+        pre_vc.setAttribute("style", "display: inline;")
+        div_vc.appendChild(pre_vc)
+        container.appendChild(div_vc)
 
         var div6 = document.createElement("div")
         div6.setAttribute("style", "padding-bottom: 10px")
