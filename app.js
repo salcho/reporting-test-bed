@@ -53,7 +53,6 @@ app.post('/run-reports', async (req, res) => {
     console.log(e)
   }
   console.log("end run-reports")
-  // res.sendStatus(204)
   res.redirect('/see-reports?id=' + id);
 })
 
@@ -61,7 +60,7 @@ app.get(`/see-reports`, function(req, res) {
   res.sendFile(__dirname + '/views/seeReports.html');
 })
 
-app.get(`/process-reports`, function(req,res){
+app.get(`/get-reports`, function(req,res){
   console.log("start process-reports")
 
   let directory_name = __dirname + '/reports/' + req.query.id
@@ -76,7 +75,7 @@ app.get(`/process-reports`, function(req,res){
   files.forEach(file => {
     let rawdata = fs.readFileSync(directory_name + '/' + file)
     let reportJSON = JSON.parse(rawdata);
-    processedReports.push(processReport(reportJSON))
+    processedReports.push(reportJSON)
   })
 
   res.send(processedReports)
@@ -92,7 +91,6 @@ app.post('/csp-reports', function(req, res){
 app.post('/trustedTypes-report', function(req, res){
   console.log('Trusted types violation!')
   console.log(req.body)
-
   saveReport(req.body, 'tt_')
   res.sendStatus(204)
 })
