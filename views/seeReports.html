@@ -8,7 +8,6 @@
 </head>
 <body>
     <div id="container">
-
         
     </div>
 </body>
@@ -142,9 +141,7 @@
 
         var div6 = document.createElement("div")
         div6.setAttribute("style", "padding-bottom: 10px")
-
         var rep = document.createElement("h4")
-        rep.setAttribute("style", "display: inline;")
         rep.innerHTML = `Report: `
         div6.appendChild(rep)
 
@@ -153,7 +150,6 @@
         code3.setAttribute("class", "html")
         code3.innerHTML = syntaxHighlight(reportJSON["original_report"]) 
         pre3.appendChild(code3)
-        // pre3.setAttribute("style", "display: inline; padding-left: 5px")
         div6.appendChild(pre3)
         container.appendChild(div6)
 
