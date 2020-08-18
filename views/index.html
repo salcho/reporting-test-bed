@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>TestBed</title>
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
 </head>
 <body>
 
@@ -25,21 +26,11 @@
     </form>
     
     <div style="padding-top: 100px;">
-        <table>
+        <table id="table">
             <tr>
-                <th>Violation</th>
                 <th>Id</th>
+                <th>Violation</th>
                 <th>Explanation</th>
-            </tr>
-            <tr>
-                <td>entry</td>
-                <td>entry</td>
-                <td>entry</td>
-            </tr>
-            <tr>
-                <td>entry</td>
-                <td>entry</td>
-                <td>entry</td>
             </tr>
         </table>
     </div>
@@ -47,7 +38,27 @@
 </body>
 </html>
 <script>
+    $.get("/getTableContent", function(data) { 
+        var table = document.getElementById("table")
+        
+        for (i = 0; i < data.length; i++){
+            var row = document.createElement("tr")
+            
+            var colId = document.createElement("td")
+            colId.innerHTML = data[i]
+            row.appendChild(colId)
 
+            var colViol = document.createElement("td")
+            colViol.innerHTML = "entry"
+            row.appendChild(colViol)
+
+            var colExpl = document.createElement("td")
+            colExpl.innerHTML = "entry"
+            row.appendChild(colExpl)
+
+            table.appendChild(row)
+        }
+    });
 </script>
 <style>
     table, th, td {

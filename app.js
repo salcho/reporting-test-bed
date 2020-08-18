@@ -7,7 +7,6 @@ const bodyParser = require('body-parser');
 const views = require('./views/viewRoutes');
 const fs = require('fs');
 const dateFormat = require('dateformat');
-const { type } = require('os');
 
 const { saveReport, processReport } = require('./helpers')  
 
@@ -58,6 +57,25 @@ app.post('/run-reports', async (req, res) => {
 
 app.get(`/see-reports`, function(req, res) {
   res.sendFile(__dirname + '/views/seeReports.html');
+})
+
+app.get('/getTableContent', function(req, res){
+  const queue_file = __dirname + '/reports/table_queue.txt'
+
+  let rawdata = fs.readFileSync(queue_file, 'utf8')
+  var arr = (function(data) {
+      try {
+          if (rawdata.length == 0){return []}
+          return rawdata.split(",");
+      } catch (err) {
+          // console.log(err)
+          return [];
+      }
+  })(rawdata)
+
+  console.log(arr)
+
+  res.send(arr)
 })
 
 app.get(`/get-reports`, function(req,res){

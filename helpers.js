@@ -76,21 +76,51 @@ module.exports = {
 };
 
 function saveToFile(report, id, type) {
-  let report_to_save = JSON.stringify(report)
-  directory_name = __dirname + '/reports/' + id
-  // check if directory already exists
-  if (!fs.existsSync(directory_name)) {
-    fs.mkdir(directory_name, function (err) {
-      if (err) {
-        return console.log(err);
-      }
-    });
-  }
-
-  file_name = `${type}${dateFormat(Date.now(), "dd-mm-yyyy_h:MM:ss")}_rand${Math.floor((Math.random() * 5000) + 1)}'.json`
-  fs.writeFile(directory_name + '/' + file_name, report_to_save, function (err) {
-    if (err) {
-      return console.log(err);
+    let report_to_save = JSON.stringify(report)
+    directory_name = __dirname + '/reports/' + id
+    // check if directory already exists
+    if (!fs.existsSync(directory_name)) {
+        fs.mkdir(directory_name, function (err) {
+        if (err) {
+            return console.log(err);
+        }
+        });
     }
-  });
+
+    file_name = `${type}${dateFormat(Date.now(), "dd-mm-yyyy_h:MM:ss")}_rand${Math.floor((Math.random() * 5000) + 1)}'.json`
+    fs.writeFile(directory_name + '/' + file_name, report_to_save, function (err) {
+        if (err) {
+        return console.log(err);
+        }
+    });
+
+    const queue_file = __dirname + '/reports/table_queue.txt'
+
+    let rawdata = fs.readFileSync(queue_file, 'utf8')
+    var arr = (function(data) {
+        try {
+            if (rawdata.length == 0){return []}
+            return rawdata.split(",");
+        } catch (err) {
+            console.log(err)
+            return [];
+        }
+    })(rawdata)
+
+    console.log(arr)
+    console.log(arr.length)
+    if (arr.length > 5){
+        arr.shift()
+        arr.push(id)
+    } else {
+        arr.push(id)
+    }
+
+    fs.writeFile(queue_file, arr.toString(), function (err) {
+        if (err) {
+        return console.log(err);
+        }
+    });
+
+
 }
