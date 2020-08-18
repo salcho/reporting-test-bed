@@ -28,9 +28,8 @@
     <div style="padding-top: 100px;">
         <table id="table">
             <tr>
-                <th>Id</th>
-                <th>Violation</th>
-                <th>Explanation</th>
+                <th style="text-align: center;">Id</th>
+                <th style="text-align: center;"># of reports</th>
             </tr>
         </table>
     </div>
@@ -41,20 +40,21 @@
     $.get("/getTableContent", function(data) { 
         var table = document.getElementById("table")
         
-        for (i = 0; i < data.length; i++){
+        for (var pk in data){
             var row = document.createElement("tr")
             
             var colId = document.createElement("td")
-            colId.innerHTML = data[i]
+            var refId = document.createElement("a")
+            refId.setAttribute("href", `/see-reports?id=${pk}`)
+            refId.setAttribute("target","_blank")
+            refId.innerHTML = pk
+            colId.appendChild(refId)
             row.appendChild(colId)
 
-            var colViol = document.createElement("td")
-            colViol.innerHTML = "entry"
-            row.appendChild(colViol)
-
-            var colExpl = document.createElement("td")
-            colExpl.innerHTML = "entry"
-            row.appendChild(colExpl)
+            var colRep = document.createElement("td")
+            colRep.innerHTML = data[pk]
+            colRep.setAttribute("style", "text-align: center;")
+            row.appendChild(colRep)
 
             table.appendChild(row)
         }

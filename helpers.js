@@ -107,9 +107,13 @@ function saveToFile(report, id, type) {
         }
     })(rawdata)
 
+    if (arr.includes(id)){
+      return
+    }
+
     console.log(arr)
     console.log(arr.length)
-    if (arr.length > 5){
+    if (arr.length > 4){
         arr.shift()
         arr.push(id)
     } else {

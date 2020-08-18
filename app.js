@@ -35,13 +35,13 @@ app.get('/', function(req, res){
 })
 
 app.post('/run-reports', async (req, res) => {
-  console.log("start run-reports")
+  // console.log("start run-reports")
   var id = crypto.randomBytes(20).toString('hex');
   try {
     const browser = await puppeteer.launch();
     const openPage = await browser.newPage();
     const pages = Object.values(req.body).map(e => `http://${hostname}:${port}/${e}?id=${id}`)
-    console.log(pages)
+    // console.log(pages)
 
     // open report endpoints
     for(const page of pages) {
@@ -51,7 +51,7 @@ app.post('/run-reports', async (req, res) => {
   } catch (e) {
     console.log(e)
   }
-  console.log("end run-reports")
+  // console.log("end run-reports")
   res.redirect('/see-reports?id=' + id);
 })
 
@@ -61,6 +61,7 @@ app.get(`/see-reports`, function(req, res) {
 
 app.get('/getTableContent', function(req, res){
   const queue_file = __dirname + '/reports/table_queue.txt'
+  var directory = __dirname + '/reports'
 
   let rawdata = fs.readFileSync(queue_file, 'utf8')
   var arr = (function(data) {
@@ -73,13 +74,18 @@ app.get('/getTableContent', function(req, res){
       }
   })(rawdata)
 
-  console.log(arr)
+  var reports = {}
+  for (i=0; i<arr.length; i++){
+    var id = arr[i]
+    reports[id] = fs.readdirSync(directory + '/' + id, 'utf8').length
+  }
 
-  res.send(arr)
+  // console.log(reports)
+  res.send(reports)
 })
 
 app.get(`/get-reports`, function(req,res){
-  console.log("start process-reports")
+  // console.log("start process-reports")
 
   let directory_name = __dirname + '/reports/' + req.query.id
 
