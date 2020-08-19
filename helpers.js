@@ -13,10 +13,10 @@ module.exports = {
     let column = report["column-number"]
     let file = report["source-file"]
     let originalPolicy = report["original-policy"]
-  
+
     let report_type = ""
     let explanation = ""
-  
+
     if (violatedDirective == "script-src-elem" && blockedUri == "inline") {
       explanation = "Nonce value incorrect or non-existent"
       report_type = "CSP violation"
@@ -34,14 +34,14 @@ module.exports = {
       } else {
         explanation = `Trusted Types Violation: ${cause} attribute blocked, Trusted types required`
       }
-  
+
       report_type = "Trusted Types violation"
     } else {
       root_cause = violatedDirective
       explanation = "Unknow violation"
       report_type = "Unknown violation"
     }
-  
+
     var processed = {
       "type": report_type,
       "row": row,
@@ -52,79 +52,74 @@ module.exports = {
       "sample_script": scriptSample,
       "original_policy": originalPolicy,
       "file": file,
-      "violating_code" : ""
+      "violating_code": ""
     }
-  
+
     fetch(report['document-uri'])
       .then(res => res.text())
       .then(body => {
         let lines = body.split("\n")
-        processed["violating_code"] = lines[row-1]
-        console.log(lines[row-1])
-        
+        processed["violating_code"] = lines[row - 1]
+        console.log(lines[row - 1])
+
         saveToFile(processed, rawReport['csp-report']["document-uri"].split("=")[1], type)
       })
-      .catch(err =>{
+      .catch(err => {
         console.log(err);
         saveToFile(processed, rawReport['csp-report']["document-uri"].split("=")[1], type)
       });
-
-    
-
-    
   }
 };
 
 function saveToFile(report, id, type) {
-    let report_to_save = JSON.stringify(report)
-    directory_name = __dirname + '/reports/' + id
-    // check if directory already exists
-    if (!fs.existsSync(directory_name)) {
-        fs.mkdir(directory_name, function (err) {
-        if (err) {
-            return console.log(err);
-        }
-        });
-    }
+  let report_to_save = JSON.stringify(report)
+  directory_name = __dirname + '/reports/' + id
+  var now = Date.now();
 
-    file_name = `${type}${dateFormat(Date.now(), "dd-mm-yyyy_h:MM:ss")}_rand${Math.floor((Math.random() * 5000) + 1)}'.json`
-    fs.writeFile(directory_name + '/' + file_name, report_to_save, function (err) {
-        if (err) {
+  // check if directory already exists
+  if (!fs.existsSync(directory_name)) {
+    fs.mkdir(directory_name, function (err) {
+      if (err) {
         return console.log(err);
-        }
+      }
     });
+    writeToQueueFile(id, now)
+  }
 
-    const queue_file = __dirname + '/reports/table_queue.txt'
-
-    let rawdata = fs.readFileSync(queue_file, 'utf8')
-    var arr = (function(data) {
-        try {
-            if (rawdata.length == 0){return []}
-            return rawdata.split(",");
-        } catch (err) {
-            console.log(err)
-            return [];
-        }
-    })(rawdata)
-
-    if (arr.includes(id)){
-      return
+  file_name = `${type}${dateFormat(now, "dd-mm-yyyy_h:MM:ss")}_rand${Math.floor((Math.random() * 5000) + 1)}'.json`
+  fs.writeFile(directory_name + '/' + file_name, report_to_save, function (err) {
+    if (err) {
+      return console.log(err);
     }
+  });
+}
 
-    console.log(arr)
-    console.log(arr.length)
-    if (arr.length > 4){
-        arr.shift()
-        arr.push(id)
-    } else {
-        arr.push(id)
+function writeToQueueFile(id, now) {
+  const queue_file = __dirname + '/reports/table_queue.json'
+  
+  var arr;
+  if (!fs.existsSync(queue_file)) {
+    arr = []
+  } else {
+    arr = JSON.parse(fs.readFileSync(queue_file))
+  }
+
+  var formSubmitObj = {
+    id : id,
+    date : dateFormat(now, "h:MM dd-mm-yyyy")
+  }
+  console.log(arr)
+  console.log(arr.length)
+  if (arr.length > 10) {
+    arr.shift()
+    arr.push(formSubmitObj)
+  } else {
+    arr.push(formSubmitObj)
+  }
+
+  fs.writeFile(queue_file, JSON.stringify(arr), function (err) {
+    if (err) {
+      return console.log(err);
     }
-
-    fs.writeFile(queue_file, arr.toString(), function (err) {
-        if (err) {
-        return console.log(err);
-        }
-    });
-
-
+  });
 }

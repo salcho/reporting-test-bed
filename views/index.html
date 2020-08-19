@@ -30,6 +30,7 @@
             <tr>
                 <th style="text-align: center;">Id</th>
                 <th style="text-align: center;"># of reports</th>
+                <th style="text-align: center;">Time Stamp</th>
             </tr>
         </table>
     </div>
@@ -39,7 +40,7 @@
 <script>
     $.get("/getTableContent", function(data) { 
         var table = document.getElementById("table")
-        
+        console.log(data)
         for (var pk in data){
             var row = document.createElement("tr")
             
@@ -52,9 +53,14 @@
             row.appendChild(colId)
 
             var colRep = document.createElement("td")
-            colRep.innerHTML = data[pk]
+            colRep.innerHTML = data[pk]['numberOfReports']
             colRep.setAttribute("style", "text-align: center;")
             row.appendChild(colRep)
+
+            var colDate = document.createElement("td")
+            colDate.innerHTML = data[pk]['date']
+            colDate.setAttribute("style", "text-align: center;")
+            row.appendChild(colDate)
 
             table.appendChild(row)
         }
