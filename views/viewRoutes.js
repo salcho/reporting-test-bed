@@ -27,7 +27,7 @@ router.get('/trustedTypes/scriptSrc', (req, res) => {
 })
 
 router.get('/coep/test', (req, res) => {
-  res.setHeader('Reporting-Endpoints', 'coep-endpoint="https://localhost:3443/coep-reports"')
+  // res.setHeader('Reporting-Endpoints', 'coep-endpoint="https://localhost:3443/coep-reports"')
   // res.setHeader("Report-To", "{ group: 'coep-endpoint', max_age: 86400, endpoints: [{ url: 'https://localhost:3443/coep-reports'}]}")
   res.setHeader("Cross-Origin-Embedder-Policy", 'require-corp; report-to="coep-endpoint"')
   res.sendFile(__dirname + '/coepTest.html')

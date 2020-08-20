@@ -1,10 +1,31 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>COEP</title>
-    </head>
-    <body>
-        <h1>COEP Violation</h1>
-        <iframe src="https://www.pcgamer.com/"/>
-    </body>
+
+<head>
+    <title>COEP</title>
+</head>
+
+<body>
+    <h1>COEP Violation</h1>
+</body>
+
 </html>
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        r = new ReportingObserver(
+            reports => reports.forEach(
+                r =>  fetch(
+                    'http://localhost:3443/coep-reports',
+                    { method: 'POST', body: JSON.stringify(r.toJSON())}
+                ).then(rsp => console.log(rsp.text()))),
+            { buffered: false }
+        );
+
+        r.observe();
+
+        iframe = document.createElement('iframe');
+        iframe.src = 'https://www.pcgamer.com';
+        document.body.appendChild(iframe);
+    })
+</script>

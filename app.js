@@ -16,6 +16,7 @@ var app = express();
 app.use('/csp-reports', bodyParser.json({ type: 'application/csp-report' }));
 app.use('/run-reports', express.urlencoded({ extended: true }))
 app.use('/trustedTypes-report', bodyParser.json({ type: 'application/csp-report' }));
+app.use('/coep-reports', bodyParser.json({ type: 'text/plain' }));
 
 app.use('/csp/*', function (req, res, next) {
   res.setHeader('Content-Security-Policy', "object-src 'none';script-src 'nonce-r4nd0m' 'strict-dynamic' https: http:;base-uri 'none'; report-uri /csp-reports");
@@ -27,15 +28,20 @@ app.use('/trustedTypes/*', function (req, res, next) {
   next()
 })
 
-https.createServer({
-  cert: fs.readFileSync(path.join(__dirname, 'ssl', 'server.crt')),
-  key: fs.readFileSync(path.join(__dirname, 'ssl', 'server.key'))
-}, app)
-.listen(port, function () {
-  console.log(`Example app listening on port ${port}! Go to https://localhost:${port}/`)
-})
+// https.createServer({
+//   cert: fs.readFileSync(path.join(__dirname, 'ssl', 'server.crt')),
+//   key: fs.readFileSync(path.join(__dirname, 'ssl', 'server.key'))
+// }, app)
+// .listen(port, function () {
+//   console.log(`Example app listening on port ${port}! Go to https://localhost:${port}/`)
+// })
+
+app.listen(port, hostname, () => {
+  console.log(`Server running at http://${hostname}:${port}/`);
+});
 
 app.get('/', function (req, res) {
+  res.setHeader("Report-To", "{ group: 'coep-endpoint', max_age: 86400, endpoints: [{ url: 'https://doomedcoepreports.com:8080/coep-reports'}]}")
   res.sendFile(__dirname + "/views" + "/index.html")
 })
 
