@@ -1,12 +1,13 @@
 const hostname = '127.0.0.1';
-const port = 3000;
+const port = 3443;
 const puppeteer = require('puppeteer')
 var crypto = require("crypto");
 const express = require('express')
 const bodyParser = require('body-parser');
 const views = require('./views/viewRoutes');
 const fs = require('fs');
-const dateFormat = require('dateformat');
+var https = require('https');
+var path = require('path')
 
 const { saveReport, processReport } = require('./helpers')
 
@@ -26,9 +27,13 @@ app.use('/trustedTypes/*', function (req, res, next) {
   next()
 })
 
-app.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});
+https.createServer({
+  cert: fs.readFileSync(path.join(__dirname, 'ssl', 'server.crt')),
+  key: fs.readFileSync(path.join(__dirname, 'ssl', 'server.key'))
+}, app)
+.listen(port, function () {
+  console.log(`Example app listening on port ${port}! Go to https://localhost:${port}/`)
+})
 
 app.get('/', function (req, res) {
   res.sendFile(__dirname + "/views" + "/index.html")
@@ -82,7 +87,7 @@ app.get(`/get-reports`, function (req, res) {
 
   //make sure directory exists
   if (!fs.existsSync(directory_name)) {
-    res.sendStatus(400).send("Report files don't exist")
+    res.sendStatus(400)
   }
 
   processedReports = []
@@ -100,6 +105,12 @@ app.post('/csp-reports', function (req, res) {
   console.log('CSP violation!')
   console.log(req.body)
   saveReport(req.body, 'csp_')
+  res.sendStatus(204)
+})
+
+app.post('/coep-reports', function (req, res) {
+  console.log('COEP violation!')
+  console.log(req.body)
   res.sendStatus(204)
 })
 
