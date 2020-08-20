@@ -34,23 +34,24 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + "/views" + "/index.html")
 })
 
-app.post('/run-reports', async (req, res) => {
-  var id = crypto.randomBytes(20).toString('hex');
-  try {
-    const browser = await puppeteer.launch();
-    const openPage = await browser.newPage();
-    const pages = Object.values(req.body).map(e => `http://${hostname}:${port}/${e}?id=${id}`)
+//!Leaving this in just incase we want it back later
+// app.post('/run-reports', async (req, res) => {
+//   var id = crypto.randomBytes(20).toString('hex');
+//   try {
+//     const browser = await puppeteer.launch();
+//     const openPage = await browser.newPage();
+//     const pages = Object.values(req.body).map(e => `http://${hostname}:${port}/${e}?id=${id}`)
 
-    // open report endpoints
-    for (const page of pages) {
-      await openPage.goto(page, { waitUntil: 'networkidle0' }) // wait for puppeteer to complete fetch
-    }
-    await browser.close()
-  } catch (e) {
-    console.log(e)
-  }
-  res.redirect('/see-reports?id=' + id);
-})
+//     // open report endpoints
+//     for (const page of pages) {
+//       await openPage.goto(page, { waitUntil: 'networkidle0' }) // wait for puppeteer to complete fetch
+//     }
+//     await browser.close()
+//   } catch (e) {
+//     console.log(e)
+//   }
+//   res.redirect('/see-reports?id=' + id);
+// })
 
 app.get(`/see-reports`, function (req, res) {
   res.sendFile(__dirname + '/views/seeReports.html');
