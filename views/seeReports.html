@@ -108,7 +108,7 @@
             if (elm.hasAttribute('highlight')) {
                 elm.innerHTML = this.syntaxHighlight(this.reportJSON[k]);
             } else {
-                elm.innerHTML = JSON.stringify(this.reportJSON[k]);
+                elm.innerHTML = this.reportJSON[k];
             }
         })
         return copy 
