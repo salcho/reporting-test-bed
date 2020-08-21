@@ -41,8 +41,4 @@ router.get('/coep/crossOriginResources', (req, res) => {
   res.sendFile(__dirname + '/coep/crossOriginResources.html')
 })
 
-router.get('/coep/crossOriginPopup', (req, res) => {
-  res.sendFile(__dirname + '/coep/crossOriginPopup.html')
-})
-
 module.exports = router;
