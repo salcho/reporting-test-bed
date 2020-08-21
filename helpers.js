@@ -4,6 +4,14 @@ const fetch = require('node-fetch');
 
 module.exports = {
   saveReport: (rawReport, type) => {
+    
+    //if it's a coep report, just save for now,
+    // we're going to implement the processing soon!
+    if (type == 'coep_') {
+      saveToFile(rawReport, rawReport['url'].split("=")[1], 'coep_')
+      return;
+    }
+
     let report = rawReport["csp-report"]
     let violatedDirective = report["violated-directive"]
     let root_cause = report["effective-directive"]

@@ -9,6 +9,7 @@
     <h1>Test Bed</h1>
     
     <form id="testForm">
+        <!-- CSP -->
         <input type="checkbox" id="inlineEventHandler" name="test1" value="csp/inlineEventHandler">
         <label for="inlineEventHandler"> CSP - Inline Event Handler </label><br>
         <input type="checkbox" id="scriptWithoutNonce" name="test2" value="csp/scriptWithoutNonce">
@@ -17,10 +18,18 @@
         <label for="test3"> CSP - JavaScript URI</label><br>
         <input type="checkbox" id="unsafeEval" name="test4" value="csp/unsafeEval">
         <label for="test4"> CSP - Unsafe Eval</label><br>
+       <!-- Trusted Types -->
         <input type="checkbox" id="innerHTML" name="test5" value="trustedTypes/innerHTML">
         <label for="test5"> Trusted Types - innerHTML</label><br>
         <input type="checkbox" id="scriptSrc" name="test6" value="trustedTypes/scriptSrc">
         <label for="test6"> Trusted Types - Script src attribute</label><br>
+        <!-- COEP -->
+        <input type="checkbox" id="crossOriginIframe" name="test7" value="coep/crossOriginIframe">
+        <label for="test7"> COEP - Cross Origin Iframe</label><br>
+        <input type="checkbox" id="crossOriginResources" name="test8" value="coep/crossOriginResources">
+        <label for="test8"> COEP - Cross Origin Resources</label><br>
+        <input type="checkbox" id="crossOriginPopup" name="test9" value="coep/crossOriginPopup">
+        <label for="test9"> COEP - Cross Origin Popup</label><br>
         <br>
         <input type="button" value="Submit" id="submit">
     </form>

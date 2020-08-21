@@ -13,6 +13,8 @@ const { saveReport, processReport } = require('./helpers')
 
 var app = express();
 
+app.use(express.static(__dirname + '/views'));
+
 app.use('/csp-reports', bodyParser.json({ type: 'application/csp-report' }));
 app.use('/run-reports', express.urlencoded({ extended: true }))
 app.use('/trustedTypes-report', bodyParser.json({ type: 'application/csp-report' }));
@@ -25,6 +27,11 @@ app.use('/csp/*', function (req, res, next) {
 
 app.use('/trustedTypes/*', function (req, res, next) {
   res.setHeader('Content-Security-Policy', "object-src 'none'; require-trusted-types-for 'script';base-uri 'none'; report-uri /trustedTypes-report");
+  next()
+})
+
+app.use('/coep/*', function (req, res, next) {
+  res.setHeader('Cross-Origin-Embedder-Policy',"require-corp");
   next()
 })
 
@@ -117,6 +124,7 @@ app.post('/csp-reports', function (req, res) {
 app.post('/coep-reports', function (req, res) {
   console.log('COEP violation!')
   console.log(req.body)
+  saveReport(req.body, 'coep_')
   res.sendStatus(204)
 })
 

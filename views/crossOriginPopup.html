@@ -2,13 +2,14 @@
 <html>
     <head>
         <title>Cross origin popup</title>
+        <script src="../collectCoepReports.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', (event) => {
+                window.open("https://stackoverflow.com/");
+            })
+        </script>
     </head>
-    <body onload="openPopup()">
+    <body>
         <h1>Cross origin popup</h1>
     </body>
 </html>
-<script>
-    function openPopup(){
-        window.open("https://stackoverflow.com/");
-    }
-</script>

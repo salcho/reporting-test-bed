@@ -1,10 +1,20 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Cross origin iframe</title>
-    </head>
-    <body>
-        <h1>Cross origin iframe</h1>
-        <iframe src="https://stackoverflow.com/" />
-    </body>
+
+<head>
+    <title>Cross origin iframe</title>
+    <script src="../collectCoepReports.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            iframe = document.createElement('iframe');
+            iframe.src = 'https://www.pcgamer.com';
+            document.body.appendChild(iframe);
+        })
+    </script>
+</head>
+
+<body>
+    <h1>Cross origin iframe</h1>
+</body>
+
 </html>
