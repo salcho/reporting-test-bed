@@ -21,7 +21,7 @@ app.use('/trustedTypes-report', bodyParser.json({ type: 'application/csp-report'
 app.use('/coep-reports', bodyParser.json({ type: 'text/plain' }));
 
 app.use('/csp/*', function (req, res, next) {
-  res.setHeader('Content-Security-Policy', "object-src 'none';script-src 'nonce-r4nd0m' 'strict-dynamic' https: http:;base-uri 'none'; report-uri /csp-reports");
+  res.setHeader('Content-Security-Policy', "object-src 'none';script-src 'nonce-r4nd0m' 'strict-dynamic' 'report-sample' https: http:;base-uri 'none'; report-uri /csp-reports;");
   next()
 })
 
