@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script>
+        var loaded = 0
+        var args = window.location.search.split('?')[1]
+        var tests = args.split(',')
+        var id = revisedRandId()
+
+        document.addEventListener('DOMContentLoaded', function () {
+            for (t of tests) {
+                addIframe(t + "?id=" + id)
+            }
+        })
+
+        function addIframe(src) {
+            var iframe = document.createElement('iframe');
+            iframe.style.display = "none";
+            iframe.addEventListener('load', iframeLoaded);
+            iframe.src = src;
+            document.body.appendChild(iframe);
+        }
+
+        function revisedRandId() {
+            let id = ""
+            for (let i = 0; i < 4; i++) {
+                id = id + Math.random().toString(36).substring(2, 15)
+            }
+            return id
+        }
+
+        function iframeLoaded() {
+            if (++loaded >= tests.length) {
+                window.location.replace("/see-reports?id=" + id); 
+            }
+        }
+    </script>
+</head>
+
+</html>

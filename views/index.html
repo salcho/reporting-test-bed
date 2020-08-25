@@ -28,6 +28,8 @@
         <label for="test7"> COEP - Cross Origin Iframe</label><br>
         <input type="checkbox" id="crossOriginResources" name="test8" value="coep/crossOriginResources">
         <label for="test8"> COEP - Cross Origin Resources</label><br>
+        <input type="checkbox" id="crossOriginPopup" name="test9" value="coep/crossOriginPopup">
+        <label for="test9"> COEP - Cross Origin Popup</label><br>
         <br>
         <input type="button" value="Submit" id="submit">
     </form>
@@ -51,18 +53,26 @@
         var id = revisedRandId()
 
         var form = new FormData(document.getElementById('testForm'))
-        console.log($('#testForm').serializeArray())
-        let url = window.location.href.split('?')[0];
-        let testWindows = []
+        var serializedForm = $('#testForm').serializeArray()
+        
+        let tests = []
         for (pair of form) {
-            testWindows.push(window.open(`${url}${pair[1]}?=${id}`))
+            tests.push(pair[1])
         }
-        setInterval(() => {
-            testWindows.forEach(wind => wind.close())
-            window.location.replace(`${url}see-reports?id=${id}`)
-        }, 1000)
 
-    })
+        // let url = window.location.href.split('?')[0];
+        // let testWindows = []
+        // for (pair of form) {
+        //     testWindows.push(window.open(`${url}${pair[1]}?=${id}`))
+        // }
+        // setInterval(() => {
+        //     testWindows.forEach(wind => wind.close())
+        //     window.location.replace(`${url}see-reports?id=${id}`)
+        // }, 1000)
+       
+        window.location.replace("/run-reports?" + tests.join(','));
+
+    });
 
     function revisedRandId() {
         let id = ""

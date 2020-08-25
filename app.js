@@ -75,6 +75,10 @@ app.get(`/see-reports`, function (req, res) {
   res.sendFile(__dirname + '/views/seeReports.html');
 })
 
+app.get(`/run-reports`, function (req, res) {
+  res.sendFile(__dirname + '/views/runReports.html');
+})
+
 app.get('/getTableContent', function (req, res) {
   const queue_file = __dirname + '/reports/table_queue.json'
   var directory = __dirname + '/reports'
