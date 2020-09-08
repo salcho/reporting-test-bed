@@ -1,3 +1,5 @@
 /node_modules
-/reports
 /ssl
+/reports/*
+# reports/ folder is needed for the server to work properly
+!/reports/.gitkeep
