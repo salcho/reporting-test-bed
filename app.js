@@ -1,13 +1,14 @@
 const hostname = '127.0.0.1';
 const port = 3443;
 const puppeteer = require('puppeteer')
-var crypto = require("crypto");
+const crypto = require("crypto");
 const express = require('express')
 const bodyParser = require('body-parser');
 const views = require('./views/viewRoutes');
 const fs = require('fs');
-var https = require('https');
-var path = require('path')
+const https = require('https');
+const path = require('path')
+
 
 const { saveReport, processReport } = require('./helpers')
 
@@ -89,10 +90,11 @@ app.get('/getTableContent', function (req, res) {
 
   var reports = {}
   for (i = arr.length - 1; i >= 0; i--) {
-    var id = arr[i]['id']
+    var id = arr[i].id;
     reports[id] = {
       'numberOfReports': fs.readdirSync(directory + '/' + id, 'utf8').length,
-      'date': arr[i]['date']
+      'date': arr[i].date,
+      'browser': arr[i].browser
     }
   }
   console.log(reports)
@@ -121,21 +123,21 @@ app.get(`/get-reports`, function (req, res) {
 app.post('/csp-reports', function (req, res) {
   console.log('CSP violation!')
   console.log(req.body)
-  saveReport(req.body, 'csp_')
+  saveReport(req, 'csp_')
   res.sendStatus(204)
 })
 
 app.post('/coep-reports', function (req, res) {
   console.log('COEP violation!')
   console.log(req.body)
-  saveReport(req.body, 'coep_')
+  saveReport(req, 'coep_')
   res.sendStatus(204)
 })
 
 app.post('/trustedTypes-report', function (req, res) {
   console.log('Trusted types violation!')
   console.log(req.body)
-  saveReport(req.body, 'tt_')
+  saveReport(req, 'tt_')
   res.sendStatus(204)
 })
 

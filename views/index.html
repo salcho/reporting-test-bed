@@ -41,6 +41,7 @@
                 <th style="text-align: center;">Id</th>
                 <th style="text-align: center;"># of reports</th>
                 <th style="text-align: center;">Time Stamp</th>
+                <th style="text-align: center;">Browser/Version</th>
             </tr>
         </table>
     </div>
@@ -105,6 +106,11 @@
             colDate.innerHTML = data[pk]['date']
             colDate.setAttribute("style", "text-align: center;")
             row.appendChild(colDate)
+
+            var colBrowser = document.createElement("td")
+            colBrowser.innerHTML = data[pk]['browser']
+            colBrowser.setAttribute("style", "text-align: center;")
+            row.appendChild(colBrowser)
 
             table.appendChild(row)
         }
