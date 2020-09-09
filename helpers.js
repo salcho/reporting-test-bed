@@ -1,14 +1,17 @@
 const fs = require('fs');
 const dateFormat = require('dateformat');
 const fetch = require('node-fetch');
+const UAParser = require('ua-parser-js');
 
 module.exports = {
-  saveReport: (rawReport, type) => {
-    
+  saveReport: (req, type) => {
+    const rawReport = req.body
+    const { browser } = UAParser(req.get('User-Agent'))
+    const browser_string = browser.name + "/" + browser.version
     //if it's a coep report, just save for now,
     // we're going to implement the processing soon!
     if (type == 'coep_') {
-      saveToFile(rawReport, rawReport['url'].split("=")[1], 'coep_')
+      saveToFile(rawReport, rawReport['url'].split("=")[1], 'coep_', browser_string)
       return;
     }
 
@@ -60,7 +63,8 @@ module.exports = {
       "sample_script": scriptSample,
       "original_policy": originalPolicy,
       "file": file,
-      "violating_code": ""
+      "violating_code": "",
+      "browser": browser_string
     }
 
     fetch(report['document-uri'])
@@ -70,16 +74,16 @@ module.exports = {
         processed["violating_code"] = lines[row - 1]
         console.log(lines[row - 1])
 
-        saveToFile(processed, rawReport['csp-report']["document-uri"].split("=")[1], type)
+        saveToFile(processed, rawReport['csp-report']["document-uri"].split("=")[1], type, browser_string)
       })
       .catch(err => {
         console.log(err);
-        saveToFile(processed, rawReport['csp-report']["document-uri"].split("=")[1], type)
+        saveToFile(processed, rawReport['csp-report']["document-uri"].split("=")[1], type, browser_string)
       });
   }
 };
 
-function saveToFile(report, id, type) {
+function saveToFile(report, id, type, browser) {
   let report_to_save = JSON.stringify(report)
   directory_name = __dirname + '/reports/' + id
   var now = Date.now();
@@ -91,7 +95,7 @@ function saveToFile(report, id, type) {
         return console.log(err);
       }
     });
-    writeToQueueFile(id, now)
+    writeToQueueFile(id, now, browser)
   }
 
   file_name = `${type}${dateFormat(now, "dd-mm-yyyy_h:MM:ss")}_rand${Math.floor((Math.random() * 5000) + 1)}'.json`
@@ -102,7 +106,7 @@ function saveToFile(report, id, type) {
   });
 }
 
-function writeToQueueFile(id, now) {
+function writeToQueueFile(id, now, browser) {
   const queue_file = __dirname + '/reports/table_queue.json'
   
   var arr;
@@ -114,7 +118,8 @@ function writeToQueueFile(id, now) {
 
   var formSubmitObj = {
     id : id,
-    date : dateFormat(now, "h:MM dd-mm-yyyy")
+    date : dateFormat(now, "h:MM dd-mm-yyyy"),
+    browser: browser
   }
   console.log(arr)
   console.log(arr.length)
